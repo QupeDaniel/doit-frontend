@@ -3,18 +3,16 @@ import ReactDOM from 'react-dom';
 
 function InputField(props) {
     return (
-        <input className="inputTextField" type={props.type} name={props.name}>
-            {props.value}
-        </input>
+        <input className="inputTextField" type={props.type} name={props.name} />
     )
 }
  class EditMask extends React.Component {
 
-    renderTableRow(props) {
+    renderTableRow(fieldName, type, name, value) {
         return (
             <tr>
-                <td>{props.fieldName}</td>
-                <td><InputField type={props.type} name={props.name} value={props.value} /></td>
+                <td>{fieldName}</td>
+                <td><InputField type={type} name={name} value={value} /></td>
             </tr>
         )
     }
@@ -22,7 +20,7 @@ function InputField(props) {
     render() {
         return (
             <table>
-                {renderTableRow(fieldName = 'id', name = 'id', value = '')}
+                {this.renderTableRow('id', 'Text', 'id','')}
             </table>
         )
     }
