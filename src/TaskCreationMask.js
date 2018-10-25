@@ -8,7 +8,7 @@ function InputField(props) {
         </input>
     )
 }
-class EditMask extends React.Component {
+ class EditMask extends React.Component {
 
     renderTableRow(props) {
         return (
@@ -28,4 +28,4 @@ class EditMask extends React.Component {
     }
 }
 
-ReactDOM.render(<EditMask />, document.getElementById("root"));
+export default EditMask;
