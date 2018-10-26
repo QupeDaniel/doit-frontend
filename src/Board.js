@@ -10,10 +10,6 @@ export default class Board extends Component {
         tasks: []
     };
 
-    stateToDo;
-    stateWiP;
-    stateDone;
-
     componentDidMount() {
         axios
             .get('http://h2806881.stratoserver.net:8080/api/tasks')
@@ -28,10 +24,6 @@ export default class Board extends Component {
                 });
 
                 newTasks = newTasks.filter(item => item !== null);
-
-                const newState = Object.assign({}, this.state, {
-                    tasks: newTasks
-                });
 
                 this.setState({tasks: newTasks});
 
@@ -55,21 +47,21 @@ export default class Board extends Component {
             accessor: 'name' // String-based value accessors!
         }];
 
-        this.stateToDo =  this.state.tasks.filter(item => item.state === 'open');
-        this.stateWiP =  this.state.tasks.filter(item => item.state === 'wip');
-        this.stateDone =  this.state.tasks.filter(item => item.state === 'done');
+        const stateToDo =  this.state.tasks.filter(item => item.state === 'open');
+        const stateWiP =  this.state.tasks.filter(item => item.state === 'wip');
+        const stateDone =  this.state.tasks.filter(item => item.state === 'done');
 
         return (
 
             <div>
                 <div className='col'>
-                    <ReactTable data={this.stateToDo} columns={columnsToDo}/>
+                    <ReactTable data={stateToDo} columns={columnsToDo}/>
                 </div>
                 <div className="col">
-                    <ReactTable data={this.stateWiP} columns={columnsWiP}/>
+                    <ReactTable data={stateWiP} columns={columnsWiP}/>
                 </div>
                 <div className="col">
-                    <ReactTable data={this.stateDone} columns={columnsDone}/>
+                    <ReactTable data={stateDone} columns={columnsDone}/>
                 </div>
             </div>
         )
