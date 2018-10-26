@@ -10,23 +10,31 @@ export default class Board extends Component {
         tasks: []
     };
 
+    stateToDo;
+    stateWiP;
+    stateDone;
+
     componentDidMount() {
         axios
             .get('http://h2806881.stratoserver.net:8080/api/tasks')
             .then(response => {
 
-                const newTasks = response.map(task => {
+                let newTasks = response.data.map(task => {
                     return {
                         id: task.id,
-                        name: task.name
+                        name: task.name,
+                        state: task.state
                     }
                 });
+
+                newTasks = newTasks.filter(item => item !== null);
 
                 const newState = Object.assign({}, this.state, {
                     tasks: newTasks
                 });
 
-                this.setState(newState);
+                this.setState({tasks: newTasks});
+
             })
             .catch(error => console.log(error));
     }
@@ -47,25 +55,21 @@ export default class Board extends Component {
             accessor: 'name' // String-based value accessors!
         }];
 
-        let stateToDo;
-        let stateWiP;
-        let stateDone;
-
-        this.state.tasks = this.state.tasks.filter(item => item !== null);
-        stateToDo =  this.state.tasks.filter(item => item.state === 'open');
-        stateWiP =  this.state.tasks.filter(item => item.state === 'wip');
-        stateDone =  this.state.tasks.filter(item => item.state === 'done');
+        this.stateToDo =  this.state.tasks.filter(item => item.state === 'open');
+        this.stateWiP =  this.state.tasks.filter(item => item.state === 'wip');
+        this.stateDone =  this.state.tasks.filter(item => item.state === 'done');
 
         return (
+
             <div>
                 <div className='col'>
-                    <ReactTable data={stateToDo} columns={columnsToDo}/>
+                    <ReactTable data={this.stateToDo} columns={columnsToDo}/>
                 </div>
                 <div className="col">
-                    <ReactTable data={stateWiP} columns={columnsWiP}/>
+                    <ReactTable data={this.stateWiP} columns={columnsWiP}/>
                 </div>
                 <div className="col">
-                    <ReactTable data={stateDone} columns={columnsDone}/>
+                    <ReactTable data={this.stateDone} columns={columnsDone}/>
                 </div>
             </div>
         )
