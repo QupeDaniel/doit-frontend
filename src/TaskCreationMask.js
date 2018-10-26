@@ -1,19 +1,34 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import TaskStatus from './StatusEnum.js';
+import { DropdownButton, MenuItem, ButtonToolbar } from 'react-bootstrap';
+import TaskModel from './TaskModel.js';
 
 function InputField(props) {
     return (
         <input className="inputTextField" type={props.type} name={props.name} value={props.value} />
     )
 }
- class EditMask extends React.Component {
+class EditMask extends React.Component {
 
-    renderTableRowInput(fieldName, type, name, value) {
+    task;
+
+    constructor(props) {
+        super(props);
+        this.task = new TaskModel();
+
+        this.onInputChanged = this.onInputChanged.bind(this);
+    }
+
+    onInputChanged(name, newInput) {
+        this.task[name] = newInput;
+        console.log(this.task);
+    }
+
+    renderTableRowInput(fieldName, type, name, value, onInputChanged) {
         return (
             <tr>
                 <td>{fieldName}</td>
-                <td><InputField type={type} name={name} defaultValue={value} /></td>
+                <td><input type={type} name={name} defaultValue={value} onChange={(newValue) => { onInputChanged(name, newValue) }} /></td>
             </tr>
         )
     }
@@ -22,7 +37,7 @@ function InputField(props) {
         return (
             <tr>
                 <td>{fieldName}</td>
-                <td><textarea  name={name} defaultValue={value} /></td>
+                <td><textarea name={name} defaultValue={value} /></td>
             </tr>
         )
     }
@@ -36,40 +51,50 @@ function InputField(props) {
         )
     }
 
-    
-    renderTableRowStatusDropdown(fieldName, name, value, onStatusClicked) {
+
+    renderTableRowStatusDropdown(fieldName, value, onStatusClicked) {
         return (
-            <tr>
-                <td>{fieldName}</td>
-                {console.log('TaskStatus: ' + TaskStatus)}
-                <td><ul>
+            <ButtonToolbar>
+                <DropdownButton
+                    bsStyle={'default'}
+                    title={fieldName}
+                    key={0}
+                    id={`dropdown-basic-0`}
+                >
                     {TaskStatus.map(status => {
-                        return <li key={status} onClick={() => {onStatusClicked(status)}}>{status}</li>
-                        
+                        if (status === value) {
+                            return <MenuItem eventKey={status} onClick={(event) => { onStatusClicked(status); }} active>{status}</MenuItem>
+                        } else {
+                            return <MenuItem eventKey={status} onClick={(event) => { onStatusClicked(status); }}>{status}</MenuItem>
+                        }
                     })}
-                </ul></td>
-            </tr>
-        )
+                </DropdownButton>
+            </ButtonToolbar>
+        );
     }
+
+
 
     onStatusClicked(status) {
         console.log('Status clicked: ' + status);
     }
-    
+
 
     render() {
         return (
-            <table>
-                <tbody>
-                {this.renderTableRowInput('id', 'Text', 'id','TestValue')}
-                {this.renderTableRowInput('Name', 'Text', 'name','TestName')}
-                {this.renderTableRowTextarea('Description', 'description','Test Description')}
-                {this.renderTableRowParagraph('Created at', 'createdAt','TestValue')}
-                {this.renderTableRowParagraph('Last edit', 'lastEdit','TestValue')}
-                {this.renderTableRowStatusDropdown('Status', 'status', 'open',this.onStatusClicked)}
-                </tbody>
-            </table>
-        )
+            <div>
+                {this.renderTableRowStatusDropdown('Status', 'open', this.onStatusClicked)}
+                <table>
+                    <tbody>
+                        {this.renderTableRowInput('id', 'Text', 'id', 'TestValue', this.onInputChanged)}
+                        {this.renderTableRowInput('Name', 'Text', 'name', 'TestName')}
+                        {this.renderTableRowTextarea('Description', 'description', 'Test Description')}
+                        {this.renderTableRowParagraph('Created at', 'createdAt', 'TestValue')}
+                        {this.renderTableRowParagraph('Last edit', 'lastEdit', 'TestValue')}
+                    </tbody>
+                </table>
+            </div>
+        );
     }
 }
 
