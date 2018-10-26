@@ -15,29 +15,44 @@ class EditMask extends React.Component {
     constructor(props) {
         super(props);
         this.task = new TaskModel();
+        this.task.createdAt = this.getActualTime();
 
         this.onInputChanged = this.onInputChanged.bind(this);
+        this.onStatusClicked = this.onStatusClicked.bind(this);
+
     }
 
     onInputChanged(name, newInput) {
-        this.task[name] = newInput;
+        this.task[name] = newInput.target.value;
+        this.task.lastEdit = this.getActualTime();
         console.log(this.task);
+    }
+
+    getActualTime() {
+        var currentdate = new Date(); 
+        var datetime = currentdate.getDate() + "/"
+                        + (currentdate.getMonth()+1)  + "/" 
+                        + currentdate.getFullYear() + " @ "  
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();
+        return datetime;
     }
 
     renderTableRowInput(fieldName, type, name, value, onInputChanged) {
         return (
             <tr>
                 <td>{fieldName}</td>
-                <td><input type={type} name={name} defaultValue={value} onChange={(newValue) => { onInputChanged(name, newValue) }} /></td>
+                <td><input class="inputTextField" type={type} name={name} defaultValue={value} onChange={(newValue) => { onInputChanged(name, newValue) }} /></td>
             </tr>
         )
     }
 
-    renderTableRowTextarea(fieldName, name, value) {
+    renderTableRowTextarea(fieldName, name, value, onInputChanged) {
         return (
             <tr>
                 <td>{fieldName}</td>
-                <td><textarea name={name} defaultValue={value} /></td>
+                <td><textarea class="inputTextField" name={name} defaultValue={value} onChange={(newValue) => { onInputChanged(name, newValue) }} /></td>
             </tr>
         )
     }
@@ -76,24 +91,32 @@ class EditMask extends React.Component {
 
 
     onStatusClicked(status) {
-        console.log('Status clicked: ' + status);
+        this.task['status'] = status;
+        this.task.lastEdit = this.getActualTime();
+        console.log(this.task);
+       
     }
 
 
     render() {
         return (
             <div>
-                {this.renderTableRowStatusDropdown('Status', 'open', this.onStatusClicked)}
+                
                 <table>
                     <tbody>
                         {this.renderTableRowInput('id', 'Text', 'id', 'TestValue', this.onInputChanged)}
-                        {this.renderTableRowInput('Name', 'Text', 'name', 'TestName')}
-                        {this.renderTableRowTextarea('Description', 'description', 'Test Description')}
+                        {this.renderTableRowInput('Name', 'Text', 'name', 'TestName', this.onInputChanged)}
+                        {this.renderTableRowTextarea('Description', 'description', 'Test Description', this.onInputChanged)}
                         {this.renderTableRowParagraph('Created at', 'createdAt', 'TestValue')}
                         {this.renderTableRowParagraph('Last edit', 'lastEdit', 'TestValue')}
                     </tbody>
                 </table>
+                {this.renderTableRowStatusDropdown('Status', 'open', this.onStatusClicked)}
+
             </div>
+            <div>
+                
+                </div>
         );
     }
 }
