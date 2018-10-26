@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactTable from "react-table";
 import './Board.css';
 import 'react-table/react-table.css';
 import axios from "axios";
@@ -32,23 +31,33 @@ export default class Board extends Component {
             .catch(error => console.log(error));
     }
 
+    moveTask = (task, direction) => {
+        console.log('halloo!!!');
+    }
+
+    renderOneTask(task) {
+        return (
+        <div className="one-task">
+        <span className="col-checkbox"><input type="checkbox" value="{task.id}"/></span>
+        <span className="col-text">{task.id} {task.name} {task.description}</span>
+        <button onClick={this.moveTask.bind(this, task, 'left')}>links</button>
+        </div>
+        );
+    }
+
+
+
     render() {
 
         const stateToDo = this.state.tasks.filter(item => item.state === 'open');
         const stateWiP = this.state.tasks.filter(item => item.state === 'wip');
         const stateDone = this.state.tasks.filter(item => item.state === 'done');
 
-        const tasksToDoList = stateToDo
-            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
-            );
+        const tasksToDoList = stateToDo.map(this.renderOneTask);
 
-        const tasksWipList = stateDone
-            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
-            );
+        const tasksWipList = stateDone.map(this.renderOneTask);
 
-        const tasksDoneList = stateWiP
-            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
-            );
+        const tasksDoneList = stateWiP.map(this.renderOneTask);
 
         return (
             <div>
