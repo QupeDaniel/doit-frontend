@@ -13,7 +13,16 @@ function InputField(props) {
         return (
             <tr>
                 <td>{fieldName}</td>
-                <td><InputField type={type} name={name} value={value} /></td>
+                <td><InputField type={type} name={name} defaultValue={value} /></td>
+            </tr>
+        )
+    }
+
+    renderTableRowTextarea(fieldName, name, value) {
+        return (
+            <tr>
+                <td>{fieldName}</td>
+                <td><textarea  name={name} defaultValue={value} /></td>
             </tr>
         )
     }
@@ -35,7 +44,7 @@ function InputField(props) {
                 {console.log('TaskStatus: ' + TaskStatus)}
                 <td><ul>
                     {TaskStatus.map(status => {
-                        return <li onClick={onStatusClicked(status)}>{status}</li>
+                        return <li key={status} onClick={() => {onStatusClicked(status)}}>{status}</li>
                         
                     })}
                 </ul></td>
@@ -54,7 +63,7 @@ function InputField(props) {
                 <tbody>
                 {this.renderTableRowInput('id', 'Text', 'id','TestValue')}
                 {this.renderTableRowInput('Name', 'Text', 'name','TestName')}
-                {this.renderTableRowInput('Description', 'Text', 'description','Test Description')}
+                {this.renderTableRowTextarea('Description', 'description','Test Description')}
                 {this.renderTableRowParagraph('Created at', 'createdAt','TestValue')}
                 {this.renderTableRowParagraph('Last edit', 'lastEdit','TestValue')}
                 {this.renderTableRowStatusDropdown('Status', 'status', 'open',this.onStatusClicked)}
