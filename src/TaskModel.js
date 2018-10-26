@@ -8,7 +8,7 @@ class TaskModel {
         this.createdAt = '';
         this.lastEdit = '';
         this.completionState = '';
-        
+
     }
 }
 
