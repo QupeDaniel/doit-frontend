@@ -19,7 +19,8 @@ export default class Board extends Component {
                     return {
                         id: task.id,
                         name: task.name,
-                        state: task.state
+                        state: task.state,
+                        description: task.description
                     }
                 });
 
@@ -32,36 +33,36 @@ export default class Board extends Component {
     }
 
     render() {
-        const columnsWiP = [{
-            Header: 'WiP',
-            accessor: 'name' // String-based value accessors!
-        }];
 
-        const columnsToDo = [{
-            Header: 'ToDo',
-            accessor: 'name' // String-based value accessors!
-        }];
+        const stateToDo = this.state.tasks.filter(item => item.state === 'open');
+        const stateWiP = this.state.tasks.filter(item => item.state === 'wip');
+        const stateDone = this.state.tasks.filter(item => item.state === 'done');
 
-        const columnsDone = [{
-            Header: 'Done',
-            accessor: 'name' // String-based value accessors!
-        }];
+        const tasksToDoList = stateToDo
+            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
+            );
 
-        const stateToDo =  this.state.tasks.filter(item => item.state === 'open');
-        const stateWiP =  this.state.tasks.filter(item => item.state === 'wip');
-        const stateDone =  this.state.tasks.filter(item => item.state === 'done');
+        const tasksWipList = stateDone
+            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
+            );
+
+        const tasksDoneList = stateWiP
+            .map(task => <div className="one-task">{task.id} {task.name} {task.description}</div>
+            );
 
         return (
-
             <div>
-                <div className='col'>
-                    <ReactTable data={stateToDo} columns={columnsToDo}/>
+                <div className="table-col border-right">
+                    <h1>ToDo</h1>
+                    {tasksToDoList}
                 </div>
-                <div className="col">
-                    <ReactTable data={stateWiP} columns={columnsWiP}/>
+                <div className="table-col">
+                    <h1>WiP</h1>
+                    {tasksWipList}
                 </div>
-                <div className="col">
-                    <ReactTable data={stateDone} columns={columnsDone}/>
+                <div className="table-col border-left">
+                    <h1>Done</h1>
+                    {tasksDoneList}
                 </div>
             </div>
         )
