@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TaskStatus from './StatusEnum.js';
 
 function InputField(props) {
     return (
-        <input className="inputTextField" type={props.type} name={props.name} />
+        <input className="inputTextField" type={props.type} name={props.name} value={props.value} />
     )
 }
  class EditMask extends React.Component {
 
-    renderTableRow(fieldName, type, name, value) {
+    renderTableRowInput(fieldName, type, name, value) {
         return (
             <tr>
                 <td>{fieldName}</td>
@@ -17,10 +18,47 @@ function InputField(props) {
         )
     }
 
+    renderTableRowParagraph(fieldName, name, value) {
+        return (
+            <tr>
+                <td>{fieldName}</td>
+                <td><p name={name} >{value}</p></td>
+            </tr>
+        )
+    }
+
+    
+    renderTableRowStatusDropdown(fieldName, name, value, onStatusClicked) {
+        return (
+            <tr>
+                <td>{fieldName}</td>
+                {console.log('TaskStatus: ' + TaskStatus)}
+                <td><ul>
+                    {TaskStatus.map(status => {
+                        return <li onClick={onStatusClicked(status)}>{status}</li>
+                        
+                    })}
+                </ul></td>
+            </tr>
+        )
+    }
+
+    onStatusClicked(status) {
+        console.log('Status clicked: ' + status);
+    }
+    
+
     render() {
         return (
             <table>
-                {this.renderTableRow('id', 'Text', 'id','')}
+                <tbody>
+                {this.renderTableRowInput('id', 'Text', 'id','TestValue')}
+                {this.renderTableRowInput('Name', 'Text', 'name','TestName')}
+                {this.renderTableRowInput('Description', 'Text', 'description','Test Description')}
+                {this.renderTableRowParagraph('Created at', 'createdAt','TestValue')}
+                {this.renderTableRowParagraph('Last edit', 'lastEdit','TestValue')}
+                {this.renderTableRowStatusDropdown('Status', 'status', 'open',this.onStatusClicked)}
+                </tbody>
             </table>
         )
     }
